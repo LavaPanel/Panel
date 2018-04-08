@@ -3,7 +3,7 @@
     $root = str_replace("/templates", "/", $root);
 ?>
 <head>
-    <title>MC Server Panel | <?php echo $title ?></title>
+    <title>Lava Panel | <?php echo $title ?></title>
     <link href="<?php echo $root?>include/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo $root?>include/css/jquery.scrollbar.css" rel="stylesheet">
     <script src="<?php echo $root?>include/js/jquery-3.2.1.min.js"></script>
