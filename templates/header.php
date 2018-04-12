@@ -12,27 +12,24 @@
     <script src="<?php echo $root?>include/<?php echo $title?>/script.js"></script>
     <script>
         $(document).ready(function () {
-           $(".scrollbar-rail").scrollbar();
+            $(".scrollbar-rail").scrollbar();
+            resize();
+            window.onresize = function() {
+                resize();
+            };
+            $(".dropdown").hover(resize, function () {
+                setTimeout(resize, 200);
+            });
+            $(".navbar-toggler").click(function () {
+                setTimeout(resize, 1000);
+            });
         });
+        function resize()
+        {
+            var heights = window.innerHeight;
+            heights -= $(".navbar").height();
+            heights -= 40;
+            $(".container").height(heights + "px");
+        }
     </script>
-    <style>
-        html {
-            height: 100%;
-        }
-
-        body {
-            width: 100%;
-            height: 100%;
-            margin: 0px;
-            padding: 0px;
-        }
-
-        .container {
-            max-height: 85%;
-        }
-
-        .navbar {
-            max-height: 15%;
-        }
-    </style>
 </head>
