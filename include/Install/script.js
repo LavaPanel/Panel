@@ -77,17 +77,17 @@ function doSteps() {
     }
     var stepHeader = $("#steps-header");
     stepHeader.empty();
-    for (var i = 1; i <= step; i++) {
-        if(i !== 1) {
+    for (var i2 = 1; i2 <= step; i2++) {
+        if(i2 !== 1) {
             stepHeader.append("<li class=\"nav-item\"><a class=\"nav-link disabled\" href=\"\">>></a></li>");
         }
-        stepHeader.append("<li class=\"nav-item active\"><a class=\"nav-link\" href=\"?step=" + i + "\">Step " + i + "</a></li>");
+        stepHeader.append("<li class=\"nav-item active\"><a class=\"nav-link\" href=\"?step=" + i2 + "\">Step " + i2 + "</a></li>");
     }
     $("#step" + step).show();
 }
 
 //Maybe not needed.
-function disableButtons(step) {
+/*function disableButtons(step) {
     if (this.step = step) {
         if (finish) {
             $(".finish").prop("disabled", true);
@@ -100,7 +100,7 @@ function disableButtons(step) {
             return value !== step;
         });
     }
-}
+}*/
 
 function enableButtons(step) {
     if (this.step = step) {
@@ -115,7 +115,7 @@ function enableButtons(step) {
     }
 }
 
-window.onpopstate = function (ev) {
+window.onpopstate = function () {
     step = findGetParameter("step");
     if (step == null) {
         step = 1;
