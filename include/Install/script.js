@@ -2,6 +2,7 @@ var step;
 var finish = false;
 var enabled = [];
 $(document).ready(function () {
+    enabled = [];
     $(".good").popover({
         title: 'Good!',
         content: 'Extension loaded and working!',
@@ -14,9 +15,10 @@ $(document).ready(function () {
     });
     $(".bad-pdo").popover({
         title: 'Bad!',
-        content: 'Their are no available drivers for PDO!',
+        content: 'Their are no available drivers for PDO, or none of your drivers are supported!',
         trigger: 'hover'
     });
+
     step = findGetParameter("step");
     if (step == null) {
         step = 1;
@@ -24,7 +26,63 @@ $(document).ready(function () {
         step = parseInt(step);
     }
     doSteps();
+
+    typeChange();
+
+    $("#type").change(function () {
+        typeChange();
+    });
+
+    $("#test-conn").click(function () {
+        testConn();
+    });
+
+    $(".prev").click(function () {
+        prev();
+    });
+
+    $(".next").click(function () {
+        next();
+    });
 });
+
+function testConn() {
+    var formArray = {};
+    var text = $("#type option:selected").text();
+    var form = $("#" + text).serialize();
+    formArray['type'] = text;
+    console.debug("form data: " + form);
+    var keyAndValueGroups = form.split("&");
+    for (var i = 0; i < keyAndValueGroups.length; i++) {
+        var keyAndValue = keyAndValueGroups[i];
+        var keyValueGroup = keyAndValue.split("=");
+        var key = keyValueGroup[0];
+        var value = keyValueGroup[1];
+        //console.debug("form key: " + key + " form value: " + value);
+        formArray[key] = value;
+    }
+    var json = JSON.stringify(formArray);
+    //console.debug("form json: " + json);
+    $.ajax({
+        url: "util/test-conn.php",
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        data: json,
+        success: function (data, status, jqXHR) {
+            console.debug("Sent conn successfully with response: " + JSON.stringify(data));
+        },
+        error: function (jqXHR, status, error) {
+            console.debug("Error in testing connection: " + error);
+        }
+    });
+}
+
+function typeChange() {
+    var text = $("#type option:selected").text();
+    $("#forms").children().hide();
+    $("#" + text).show();
+}
 
 function findGetParameter(parameterName) {
     var url = new URL(window.location);
@@ -34,12 +92,14 @@ function findGetParameter(parameterName) {
 function next() {
     step++;
     window.history.pushState({step: step}, "", "?step=" + step);
+    console.debug("moving to step: " + step);
     doSteps();
 }
 
 function prev() {
     step--;
     window.history.pushState({step: step}, "", "?step=" + step);
+    console.debug("moving to step: " + step);
     doSteps();
 }
 
@@ -87,7 +147,7 @@ function doSteps() {
 }
 
 //Maybe not needed.
-/*function disableButtons(step) {
+function disableButtons(step) {
     if (this.step = step) {
         if (finish) {
             $(".finish").prop("disabled", true);
@@ -100,10 +160,10 @@ function doSteps() {
             return value !== step;
         });
     }
-}*/
+}
 
 function enableButtons(step) {
-    if (this.step = step) {
+    if (this.step === step) {
         if (finish) {
             $(".finish").prop("disabled", false);
         } else {
@@ -122,5 +182,6 @@ window.onpopstate = function () {
     } else {
         step = parseInt(step);
     }
+    console.debug("pop state step: " + step);
     doSteps();
 };

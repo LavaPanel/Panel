@@ -2,6 +2,11 @@
 <?php
 $title = "Install";
 include_once "templates/header.php";
+$supported = array(
+    'mysql',
+    'sqlite',
+    'sqlsrv'
+)
 ?>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -29,8 +34,8 @@ include_once "templates/header.php";
                 auto resume!</p>
         </div>
         <div id="install-buttons-top">
-            <button class="btn btn-primary prev" onclick="prev()" value="Previous Step"> < Previous</button>
-            <button class="btn btn-primary float-right next" onclick="next()" value="Next Step" disabled>Next >
+            <button class="btn btn-primary prev" value="Previous Step"> < Previous</button>
+            <button class="btn btn-primary float-right next" value="Next Step" disabled>Next >
             </button>
             <button class="btn btn-primary float-right finish" onclick="end()" value="End" disabled>Finish</button>
         </div>
@@ -49,8 +54,7 @@ include_once "templates/header.php";
 
         <div id="install-buttons-bottom">
             <button class="btn btn-primary prev" onclick="prev()" value="Previous Step"> < Previous</button>
-            <button class="btn btn-primary float-right next" onclick="next()" value="Next Step" disabled>Next >
-            </button>
+            <button class="btn btn-primary float-right next" onclick="next()" value="Next Step" disabled>Next ></button>
             <button class="btn btn-primary float-right finish" onclick="end()" value="End" disabled>Finish</button>
         </div>
     </div>

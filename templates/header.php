@@ -10,6 +10,7 @@
     <script src="<?php echo $root?>include/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo $root?>include/js/jquery.scrollbar.min.js"></script>
     <script src="<?php echo $root?>include/<?php echo $title?>/script.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
         $(document).ready(function () {
             $(".scrollbar-rail").scrollbar();
@@ -32,4 +33,13 @@
             $(".container").height(heights + "px");
         }
     </script>
+    <style>
+        .container {
+            overflow-x: hidden;
+        }
+
+        .row {
+            max-width: 95%;
+        }
+    </style>
 </head>
