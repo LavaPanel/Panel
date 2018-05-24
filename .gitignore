@@ -1,2 +1,4 @@
 /.conf/
 /.idea/
+/storage/*
+!/storage/readme.md

@@ -42,45 +42,89 @@ $(document).ready(function () {
     });
 
     $(".next").click(function () {
-        next();
+        next("button");
+    });
+
+    typeChange();
+
+    $("#step2-forms").children().each(function (index, value) {
+        getInputsForChange($(value));
     });
 });
 
-function testConn() {
-    var formArray = {};
-    var text = $("#type option:selected").text();
-    var form = $("#" + text).serialize();
-    formArray['type'] = text;
-    console.debug("form data: " + form);
-    var keyAndValueGroups = form.split("&");
-    for (var i = 0; i < keyAndValueGroups.length; i++) {
-        var keyAndValue = keyAndValueGroups[i];
-        var keyValueGroup = keyAndValue.split("=");
-        var key = keyValueGroup[0];
-        var value = keyValueGroup[1];
-        //console.debug("form key: " + key + " form value: " + value);
-        formArray[key] = value;
-    }
-    var json = JSON.stringify(formArray);
-    //console.debug("form json: " + json);
-    $.ajax({
-        url: "util/test-conn.php",
-        type: "POST",
-        dataType: "json",
-        contentType: "application/json",
-        data: json,
-        success: function (data, status, jqXHR) {
-            console.debug("Sent conn successfully with response: " + JSON.stringify(data));
-        },
-        error: function (jqXHR, status, error) {
-            console.debug("Error in testing connection: " + error);
+function getInputsForChange(form) {
+    form.children().each(function (index, value) {
+        if($(value).is("div")) {
+            getInputsForChange($(value));
+        } else if($(value).is("input") || $(value).is("select")) {
+            console.log("input found " + $(value).attr("id"));
+            $(value).on("change paste keyup", function () {
+                var sucess = $("#success");
+                sucess.hide();
+                var fail = $("#fail");
+                fail.hide();
+                disableButtons(2);
+            });
         }
     });
 }
 
-function typeChange() {
+function testConn() {
+    var sucess = $("#success");
+    sucess.hide();
+    var fail = $("#fail");
+    fail.hide();
+    var formArray = {};
     var text = $("#type option:selected").text();
-    $("#forms").children().hide();
+    var formObj = $("#" + text);
+    if(formObj.valid()) {
+        var form = formObj.serialize();
+        formArray['type'] = text;
+        var keyAndValueGroups = form.split("&");
+        for (var i = 0; i < keyAndValueGroups.length; i++) {
+            var keyAndValue = keyAndValueGroups[i];
+            var keyValueGroup = keyAndValue.split("=");
+            var key = keyValueGroup[0];
+            var value = keyValueGroup[1];
+            formArray[key] = value;
+        }
+        var json = JSON.stringify(formArray);
+        $.ajax({
+            url: "util/database/test-conn.php",
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            data: json,
+            success: function (data, status, jqXHR) {
+                console.debug("Sent conn successfully with response: " + JSON.stringify(data));
+                var json = data;
+                if (json['status'] === "good") {
+                    sucess.show();
+                    enableButtons(2);
+                } else {
+                    fail.html(json['message']);
+                    fail.show();
+                    disableButtons(2);
+                }
+            },
+            error: function (jqXHR, status, error) {
+                console.debug("Error in testing connection: " + error);
+            }
+        });
+    } else {
+        fail.html("Please fill out form");
+        fail.show();
+    }
+}
+
+function typeChange() {
+    var sucess = $("#success");
+    sucess.hide();
+    var fail = $("#fail");
+    fail.hide();
+    disableButtons(2);
+    var text = $("#type option:selected").text();
+    $("#step2-forms").children().hide();
     $("#" + text).show();
 }
 
@@ -89,7 +133,9 @@ function findGetParameter(parameterName) {
     return url.searchParams.get(parameterName);
 }
 
-function next() {
+function next(location) {
+    console.log("next called from loc " + location + " With step value of " + step);
+    saveStep(step);
     step++;
     window.history.pushState({step: step}, "", "?step=" + step);
     console.debug("moving to step: " + step);
@@ -97,6 +143,7 @@ function next() {
 }
 
 function prev() {
+    saveStep(step);
     step--;
     window.history.pushState({step: step}, "", "?step=" + step);
     console.debug("moving to step: " + step);
@@ -146,32 +193,61 @@ function doSteps() {
     $("#step" + step).show();
 }
 
-//Maybe not needed.
-function disableButtons(step) {
-    if (this.step = step) {
+function saveStep(step) {
+    if(step === 2) {
+        var formArray = {};
+        var text = $("#type option:selected").text();
+        var formObj = $("#" + text);
+        var form = formObj.serialize();
+        formArray['type'] = text;
+        var keyAndValueGroups = form.split("&");
+        for (var i = 0; i < keyAndValueGroups.length; i++) {
+            var keyAndValue = keyAndValueGroups[i];
+            var keyValueGroup = keyAndValue.split("=");
+            var key = keyValueGroup[0];
+            formArray[key] = keyValueGroup[1];
+        }
+        var json = JSON.stringify(formArray);
+        $.ajax({
+            url: "util/database/save-db.php",
+            type: "POST",
+            contentType: "application/json",
+            data: json,
+            success: function (data, status, jqXHR) {
+                console.debug("saved conn successfully");
+            },
+            error: function (jqXHR, status, error) {
+                console.debug("Error in saving db: " + error);
+            }
+        });
+    }
+}
+
+function disableButtons(stepValue) {
+    if (step === stepValue) {
         if (finish) {
             $(".finish").prop("disabled", true);
         } else {
             $(".next").prop("disabled", true);
         }
     }
-    if (enabled.includes(step)) {
+    if (enabled.includes(stepValue)) {
         enabled = enabled.filter(function (value) {
-            return value !== step;
+            return value !== stepValue;
         });
     }
 }
 
-function enableButtons(step) {
-    if (this.step === step) {
+function enableButtons(stepValue) {
+    if (step === stepValue) {
         if (finish) {
             $(".finish").prop("disabled", false);
         } else {
             $(".next").prop("disabled", false);
         }
     }
-    if (!enabled.includes(step)) {
-        enabled.push(step);
+    if (!enabled.includes(stepValue)) {
+        enabled.push(stepValue);
     }
 }
 
