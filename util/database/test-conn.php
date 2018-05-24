@@ -23,7 +23,7 @@ if($type === "mysql") {
 } else if($type == "sqlite") {
     $path = $data['path'];
     try {
-        $conn = new PDO("sqlite:path=$path");
+        $conn = new PDO("sqlite:$path");
         $result = array("status" => "good");
     } catch (PDOException $e) {
         $result = array("status" => "bad", "message" => $e->getMessage());
