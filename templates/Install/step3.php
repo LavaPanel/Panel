@@ -1,7 +1,7 @@
 <div id="step3">
     <div class="jumbotron">
-        <h1>Temp</h1>
+        <h1>Table Creation</h1>
         <hr>
-        <p>I'm testing stuffs</p>
+        <p>In this step we'll create all the tables required for operation</p>
     </div>
 </div>

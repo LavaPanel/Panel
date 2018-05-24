@@ -45,6 +45,15 @@ $(document).ready(function () {
         next("button");
     });
 
+    $(".finish").click(function () {
+        $.ajax({
+            url: "util/lock-install.php",
+            success: function () {
+                window.location = "index.php";
+            }
+        });
+    });
+
     typeChange();
 
     $("#step2-forms").children().each(function (index, value) {
@@ -135,6 +144,9 @@ function findGetParameter(parameterName) {
 
 function next(location) {
     console.log("next called from loc " + location + " With step value of " + step);
+    if(location !== "button") {
+        return;
+    }
     saveStep(step);
     step++;
     window.history.pushState({step: step}, "", "?step=" + step);

@@ -1,6 +1,16 @@
 <?php
     $root = substr(str_replace('\\', '/', realpath(dirname(__FILE__))), strlen(str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT']))));
     $root = str_replace("/templates", "/", $root);
+    if($title != "Install") {
+        if(!file_exists($root . "storage/install.lock")) {
+            ?>
+            <script>
+                //window.location.replace("/install.php");
+            </script>
+<?php
+            return;
+        }
+    }
 ?>
 <head>
     <title>Lava Panel | <?php echo $title ?></title>
