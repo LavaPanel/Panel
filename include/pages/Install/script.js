@@ -99,7 +99,7 @@ function testConn() {
         }
         var json = JSON.stringify(formArray);
         $.ajax({
-            url: "util/database/test-conn.php",
+            url: "util/install.php?testconn",
             type: "POST",
             dataType: "json",
             contentType: "application/json",
@@ -152,6 +152,10 @@ function next(location) {
     window.history.pushState({step: step}, "", "?step=" + step);
     console.debug("moving to step: " + step);
     doSteps();
+}
+
+function end() {
+
 }
 
 function prev() {
@@ -221,7 +225,7 @@ function saveStep(step) {
         }
         var json = JSON.stringify(formArray);
         $.ajax({
-            url: "util/database/save-db.php",
+            url: "util/install.php?savedb",
             type: "POST",
             contentType: "application/json",
             data: json,

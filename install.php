@@ -2,11 +2,11 @@
 <?php
 if(!file_exists("storage/install.lock")) {
     $title = "Install";
+    $nonav = true;
     include_once "templates/header.php";
     $supported = array(
         'mysql',
-        'sqlite',
-        'sqlsrv'
+        'sqlite'
     )
     ?>
     <body>
@@ -21,7 +21,6 @@ if(!file_exists("storage/install.lock")) {
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul id="steps-header" class="navbar-nav mr-auto">
                 <li class="nav-item active"><a class="nav-link" href="?step=1">Step 1</a></li>
-                <!--            <li class="nav-item"><a class="nav-link disabled" href="">>></a></li>-->
             </ul>
         </div>
     </nav>

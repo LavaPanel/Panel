@@ -1,26 +1,25 @@
 <?php
-    $root = substr(str_replace('\\', '/', realpath(dirname(__FILE__))), strlen(str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT']))));
-    $root = str_replace("/templates", "/", $root);
-    if($title != "Install") {
-        if(!file_exists($root . "storage/install.lock")) {
-            ?>
-            <script>
-                //window.location.replace("/install.php");
-            </script>
-<?php
-            return;
-        }
+if($title != "Install") {
+    if(!file_exists($_SERVER['DOCUMENT_ROOT'] . "storage/install.lock")) {
+        ?>
+        <script>
+            window.location.replace("/install.php");
+        </script>
+        <?php
+        return;
     }
+}
 ?>
 <head>
     <title>Lava Panel | <?php echo $title ?></title>
-    <link href="<?php echo $root?>include/css/bootstrap.min.css" rel="stylesheet">
-    <link href="<?php echo $root?>include/css/jquery.scrollbar.css" rel="stylesheet">
-    <script src="<?php echo $root?>include/js/jquery-3.2.1.min.js"></script>
-    <script src="<?php echo $root?>include/js/jquery.validate.min.js"></script>
-    <script src="<?php echo $root?>include/js/bootstrap.bundle.min.js"></script>
-    <script src="<?php echo $root?>include/js/jquery.scrollbar.min.js"></script>
-    <script src="<?php echo $root?>include/<?php echo $title?>/script.js"></script>
+    <link href="/include/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/include/css/jquery.scrollbar.css" rel="stylesheet">
+    <link href="/favicon.ico" rel="icon">
+    <script src="/include/js/jquery-3.2.1.min.js"></script>
+    <script src="/include/js/jquery.validate.min.js"></script>
+    <script src="/include/js/bootstrap.bundle.min.js"></script>
+    <script src="/include/js/jquery.scrollbar.min.js"></script>
+    <script src="/include/pages/<?php echo $title?>/script.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
         $(document).ready(function () {
@@ -54,3 +53,10 @@
         }
     </style>
 </head>
+<body>
+<?php
+if(!isset($nonav)) {
+include_once "navbar.php";
+}
+?>
+</body>
