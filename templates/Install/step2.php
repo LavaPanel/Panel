@@ -69,7 +69,7 @@ if (file_exists("storage/db.json")) {
 
                 <div class="col">
                     <label for="port">Port</label>
-                    <input class="form-control" required id="port" name="port" type="number" value="3363">
+                    <input class="form-control" required id="port" name="port" type="number" value="3306">
                 </div>
 
                 <div class="col">

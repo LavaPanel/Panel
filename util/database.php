@@ -1,6 +1,11 @@
 <?php
+require_once "GeneralUtils.php";
+
+/**
+ * @return null|PDO
+ */
 function getPDO() {
-    $data = json_decode(file_get_contents("../storage/db.json"));
+    $data = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/storage/db.json"), true);
 
     $conn = null;
 
@@ -16,18 +21,20 @@ function getPDO() {
 
         try {
             $conn = new PDO("mysql:host=$server;dbname=$database", $user, $pass);
-        } catch (PDOException $e) {
 
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            error("Error connecting to database", $e->getMessage(), false);
         }
     } else if($type == "sqlite") {
         $path = $data['path'];
         try {
             $conn = new PDO("sqlite:$path");
         } catch (PDOException $e) {
-            
+            error("Error connecting to database", $e->getMessage(), false);
         }
     } else {
-
+        error("Error connecting to database", "Database type '" . $type . "' isn't defined!", false);
     }
 
     return $conn;
